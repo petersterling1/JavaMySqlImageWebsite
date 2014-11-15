@@ -49,7 +49,7 @@ public class HomeController {
 	    return "test";
 	}
 	
-	@RequestMapping(value= "/landing",method=RequestMethod.GET)
+	@RequestMapping(value= "/landing1",method=RequestMethod.GET)
 	public String landing(Model model){
 	    String greetings = "Greetings, Spring MVC!";
 	    model.addAttribute("message", greetings);

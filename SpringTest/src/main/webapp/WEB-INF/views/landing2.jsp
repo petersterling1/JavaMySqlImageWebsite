@@ -37,15 +37,27 @@
           <a class="navbar-brand" href="#">Project name</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form">
+        
+        
+        
+          <form:form action="signin" class="navbar-form navbar-right" role="form"  method="post" commandName="signinForm">
             <div class="form-group">
+            <form:input path="user_name" />
+            <!-- 
               <input placeholder="Email" class="form-control" type="text">
+               -->
             </div>
             <div class="form-group">
+          	  <form:password path="password" />
+          	  <!-- 
               <input placeholder="Password" class="form-control" type="password">
+               -->
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+          </form:form>
+          
+          
+          
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
@@ -67,19 +79,23 @@
   <div class="bs-example">
   <!--  
     <form class="form-horizontal">
-     -->        <form:form action="register" method="post" commandName="userForm"  class="form-horizontal">
+     -->        <form:form action="registration" method="post" commandName="userForm"  class="form-horizontal">
         <div class="form-group">
             <label for="inputEmail" class="control-label col-xs-2">Username</label>
             <div class="col-xs-10">
+     			<!-- 
                 <input type="email" class="form-control" name="username" placeholder="Username">
-                <form:input path="username" />
+                 -->
+                <form:input path="user_name" />
             </div>
         </div>
         
         <div class="form-group">
             <label for="inputPassword" class="control-label col-xs-2">Password</label>
             <div class="col-xs-10">
+            	<!--
                 <input type="password" class="form-control" name="password" placeholder="Password">
+                 -->
                 <form:password path="password" />
             </div>
         </div>
@@ -88,14 +104,22 @@
         <div class="form-group">
             <label for="inputPassword" class="control-label col-xs-2">First Name</label>
             <div class="col-xs-10">
+            	<!-- 
                 <input type="password" class="form-control" name="firstname" placeholder="First Name">
+                -->
+               	<form:input path="first_name" />
+                
             </div>
         </div>
         
         <div class="form-group">
             <label for="inputPassword" class="control-label col-xs-2">Last Name</label>
             <div class="col-xs-10">
+            	<!-- 
                 <input type="password" class="form-control" name="lastname" placeholder="Last Name">
+                 -->
+                <form:input path="last_name" />
+                
             </div>
         </div>
 
@@ -103,8 +127,10 @@
         <div class="form-group">
             <label for="inputPassword" class="control-label col-xs-2">Address</label>
             <div class="col-xs-10">
+            	<!-- 
                 <input type="password" class="form-control" name="address" placeholder="Address">
-                <form:select path="profession" items="${professionList}" />
+                 -->
+                <form:input path="address" />
             </div>
         </div>
 
@@ -112,7 +138,9 @@
         <div class="form-group">
             <label for="inputPassword" class="control-label col-xs-2">Email</label>
             <div class="col-xs-10">
+            	<!--  
                 <input type="password" class="form-control" name="email" placeholder="Email">
+                 -->
                 <form:input path="email" />
             </div>
         </div>
@@ -121,8 +149,10 @@
         <div class="form-group">
             <label for="inputPassword" class="control-label col-xs-2">Phone</label>
             <div class="col-xs-10">
+              	<!-- 
                 <input type="password" class="form-control" name="phone" placeholder="Phone">
-                <form:input path="birthDate" />
+                 -->
+                <form:input path="phone" />
             </div>
         </div>
 
