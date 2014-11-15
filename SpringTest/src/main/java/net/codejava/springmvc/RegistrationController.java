@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(value ="/registration")
+@RequestMapping(value ={"/registration","/"})
 public class RegistrationController {
 
+//http://www.codejava.net/frameworks/spring/spring-mvc-form-handling-tutorial-and-example
+	
 	@RequestMapping(method = RequestMethod.GET)
     public String viewRegistration( Map<String, Object> model) {
 		RegisterUser newuser = new RegisterUser();

@@ -21,6 +21,17 @@
 
 
 	<body>
+<%
+String userName = null;
+Cookie[] cookies = request.getCookies();
+if(cookies !=null){
+for(Cookie cookie : cookies){
+    if(cookie.getName().equals("user")) userName = cookie.getValue();
+}
+}
+if(userName == null) response.sendRedirect("login.html");
+%>
+
 
 
 <nav class="navbar navbar-default" role="navigation">
@@ -33,7 +44,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Brand</a>
+      <a class="navbar-brand" href="#">Hi <%=userName %>, Login successful.</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

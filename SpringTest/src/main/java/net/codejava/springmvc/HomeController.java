@@ -27,7 +27,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
@@ -38,10 +38,10 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		return "home1";
+		return "home";
 	}
 	
-	@RequestMapping(value= "/test",method=RequestMethod.GET)
+	@RequestMapping(value= "/testing",method=RequestMethod.GET)
 	public String test(Model model){
 	    String greetings = "Greetings, Spring MVC!";
 	    model.addAttribute("message", greetings);
@@ -53,56 +53,7 @@ public class HomeController {
 	public String landing(Model model){
 	    String greetings = "Greetings, Spring MVC!";
 	    model.addAttribute("message", greetings);
-	    
-	  /*
-	 //===
-	       String m_url = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";
-	       //1525:gwynne.cs.ualberta.ca:1521 <CSID>@ohaton.cs.ualberta.ca
-
-	       String m_driverName = "oracle.jdbc.driver.OracleDriver";
-	       String m_userName = "";
-
-	       String m_password = "";
-	       Connection m_con;
-	       String createString;
-	       createString = "create table TOFFEES " +
-
-	              "(T_NAME VARCHAR(32), " +
-
-	              "SUP_ID INTEGER, " +
-
-	              "PRICE FLOAT, " +
-
-	              "SALES INTEGER, " +
-
-	              "TOTAL INTEGER)";
-	       Statement stmt;
-	       try
-	       {
-	              Class drvClass = Class.forName(m_driverName);
-	              DriverManager.registerDriver((Driver)
-	              drvClass.newInstance());
-	       } catch(Exception e)
-
-	       {
-	              System.err.print("ClassNotFoundException: ");
-	              System.err.println(e.getMessage());
-	       }
-	       try
-	       {
-	              m_con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1525:CRS", m_userName,
-	              m_password);
-	              stmt = m_con.createStatement();
-	              stmt.executeUpdate(createString);
-	              stmt.close();
-	              m_con.close();
-	       } catch(SQLException ex) {
-	              System.err.println("SQLException: " +
-	              ex.getMessage());
-	       }
-	       */
-	    
-	 //===
+	  
 	    
 	    
 	    return "landing";
