@@ -29,7 +29,7 @@ for(Cookie cookie : cookies){
     if(cookie.getName().equals("user")) userName = cookie.getValue();
 }
 }
-if(userName == null) response.sendRedirect("login.html");
+if(userName == null) response.sendRedirect("test");
 %>
 
 
@@ -225,8 +225,22 @@ if(userName == null) response.sendRedirect("login.html");
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
           <div class="list-group">
-            <a href="#" class="list-group-item active">Link</a>
-            <a href="#" class="list-group-item">Link</a>
+          
+          <!--  <a href="#" class="list-group-item active">Upload Photo</a> -->
+          <!--http://stackoverflow.com/questions/14085511/uploading-images-to-server-in-spring-mvc-and-storing-reference-in-mysql-database  -->
+            
+            <!-- <form method="POST" action="<c:url value='/upload' />"
+  			  enctype="multipart/form-data"> -->
+  			  
+  			  
+  			  <form method="POST" action="upload" enctype="multipart/form-data"> 
+   			 Upload a Photo: <input type="file" name="file" />
+  			  <input type="submit" value="upload" />
+				</form>	
+				<form method="POST" action="new" multiple="multiple"enctype="multipart/form-data">Multiple Photos		<input name="files" type="file" multiple="multiple" >
+				  <input type="submit" value="uploads" />				
+				</form>
+
             <a href="#" class="list-group-item">Link</a>
             <a href="#" class="list-group-item">Link</a>
             <a href="#" class="list-group-item">Link</a>

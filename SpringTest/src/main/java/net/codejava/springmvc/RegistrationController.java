@@ -3,6 +3,10 @@ package net.codejava.springmvc;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.codejava.springmvc.connection.SqlConnect;
 import net.codejava.springmvc.model.RegisterUser;
 import net.codejava.springmvc.model.SigninUser;
@@ -21,13 +25,17 @@ public class RegistrationController {
 //http://www.codejava.net/frameworks/spring/spring-mvc-form-handling-tutorial-and-example
 	
 	@RequestMapping(method = RequestMethod.GET)
-    public String viewRegistration( Map<String, Object> model) {
+    public String viewRegistration( Map<String, Object> model, HttpServletResponse response, HttpServletRequest request) {
 		RegisterUser newuser = new RegisterUser();
 		SigninUser signinuser = new SigninUser();
         model.put("userForm", newuser);
         model.put("signinForm", signinuser);
 
-		
+        Cookie loginCookie = new Cookie("user",null);
+        loginCookie.setMaxAge(30*60);
+        response.addCookie(loginCookie);
+        
+        
     	return "landing2";
     }
 	
