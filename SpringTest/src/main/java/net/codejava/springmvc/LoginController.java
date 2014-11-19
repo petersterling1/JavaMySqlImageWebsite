@@ -1,3 +1,4 @@
+/*
 package net.codejava.springmvc;
 
 import java.io.IOException;
@@ -22,13 +23,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value ="/signin")
 public class LoginController {
 	//
-	SqlConnect sqlcon = new SqlConnect("deasis","sqlplus1234");
+	//SqlConnect sqlcon = new SqlConnect("deasis","sqlplus1234");
 
-	/*
-	 * select count from USERS where userid = username , password = password
-	 */
     
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value ="/signin", method = RequestMethod.POST)
     public String processSignin(@ModelAttribute("signinForm") SigninUser signinuser,
             Map<String, Object> model, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
@@ -61,12 +59,7 @@ public class LoginController {
         }//if
         else{
         	
-        	/*
-        	 RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
-            PrintWriter out= response.getWriter();
-            out.println("<font color=red>Either user name or password is wrong.</font>");
-            rd.include(request, response);
-        	 */
+    
             System.out.println("hahaha= " );
             System.out.println("hahaha= " );
 
@@ -83,4 +76,4 @@ public class LoginController {
 
          
     }
-}
+}*/

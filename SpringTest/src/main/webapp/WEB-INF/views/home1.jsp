@@ -86,6 +86,22 @@ if(userName == null) response.sendRedirect("test");
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
+  
+
+  
+        <form class="navbar-form navbar-left" role="search" action="searchquery" method="POST">
+        	<div class="form-group">
+			 <input type="date" id="searchfrom" name="searchfrom" class="form-control" placeholder="Search date from"/>
+			 <input type="date" id="searchto" name="searchto" class="form-control" placeholder="Search date to" />
+        	 <input type="text" class="form-control" placeholder="Search keywords" name="keywords">
+             <select name="sort" type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+				<option value="sortnew">sort from newest</option>
+				<option value="sortold">sort from oldest</option>
+              </select>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+  
 </nav>
 
 

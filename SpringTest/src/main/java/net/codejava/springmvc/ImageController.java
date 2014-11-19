@@ -9,13 +9,17 @@ import java.sql.Blob;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialException;
 
 import net.codejava.springmvc.connection.SqlConnect;
 import net.codejava.springmvc.model.ImageSql;
+import net.codejava.springmvc.model.SigninUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +28,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 //http://stackoverflow.com/questions/11294168/update-sql-image-in-java
@@ -50,8 +56,65 @@ import net.codejava.springmvc.FileValidator;
 //http://examples.javacodegeeks.com/enterprise-java/spring/mvc/spring-mvc-file-upload-example/
 
 @Controller
+@SessionAttributes({"home","searchqueryobject"})
 //@RequestMapping("/file.htm")
 public class ImageController {
+	
+	  @RequestMapping(value ="/signin", method = RequestMethod.POST)
+	    public String processSignin(@ModelAttribute("signinForm") SigninUser signinuser,
+	            Map<String, Object> model, HttpServletResponse response, HttpServletRequest request) throws IOException {
+
+	    	
+	    	SqlConnect sqlcon = new SqlConnect("deasis","sqlplus1234");
+
+	    	
+	        System.out.println("username: " + (signinuser).getClass().getName());
+	        System.out.println("username: " + signinuser.getUser_name());
+	        System.out.println("username: " + signinuser.getPassword());
+
+	        boolean authenticated = sqlcon.CheckUser(signinuser);
+	        boolean itsgood = true;
+	        System.out.println("authenticated= " + authenticated);
+
+	        
+	        //could try Boolean too....
+	        if(itsgood == (authenticated)){
+	        	
+	            Cookie loginCookie = new Cookie("user",signinuser.getUser_name());
+	            //setting cookie to expiry in 30 mins
+	            loginCookie.setMaxAge(30*60);
+	            response.addCookie(loginCookie);
+	            
+	            //response.sendRedirect("SigninSuccess.jsp");
+	            //find jsp
+	            return "home1";
+
+	            
+	        }//if
+	        else{
+	        	
+	        	/*
+	        	 RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+	            PrintWriter out= response.getWriter();
+	            out.println("<font color=red>Either user name or password is wrong.</font>");
+	            rd.include(request, response);
+	        	 */
+	            System.out.println("hahaha= " );
+	            System.out.println("hahaha= " );
+
+	            System.out.println("hahaha= " );
+
+	            System.out.println("hahaha= " );
+	            //find jsp
+	            return "home";
+
+
+	            
+	        }// else
+
+
+	         
+	    }
 	/*
 	@Autowired
 	FileValidator validator;
@@ -197,6 +260,36 @@ public class ImageController {
   	    return "test";
   	    //
 		}
+	
+	@RequestMapping(value="/searchquery", method= RequestMethod.POST)
+	public String searchQuery(@RequestParam("searchfrom") String searchfrom,@RequestParam("searchto") String searchto, @RequestParam("keywords") String keywords, @RequestParam("sort") String sort, Map<String, Object> model, HttpServletRequest request){
+
+	//public String uploadFiles(@RequestParam("files") MultipartFile filed,HttpServletRequest request, List<MultipartFile> files){
+		 
+	//try{
+  	    System.out.println("search query controller");
+  	    System.out.println(searchfrom.getClass().getName());
+  	    System.out.println(searchfrom);
+
+  	    System.out.println(searchto.getClass().getName());
+  	    System.out.println(searchto);
+
+  	    System.out.println(keywords.getClass().getName());
+  	    System.out.println(keywords);
+
+  	    System.out.println(sort.getClass().getName());
+  	    System.out.println(sort);
+
+  	    //request.getParameter(paramName);
+  	    //        System.out.println("username: " + (newuser).getClass().getName());
+
+
+  	    //System.out.println( images.size());
+
+  	    return "home1";
+  	    //
+		}
+	
 	}
 
 
