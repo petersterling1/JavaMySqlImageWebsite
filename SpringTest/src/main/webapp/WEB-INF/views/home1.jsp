@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql"%>
+
 
 <html>
 
@@ -16,6 +18,25 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
 		 -->
 
+		<!--  date for form-->
+		<script type="text/javascript">
+    var datefield=document.createElement("input")
+    datefield.setAttribute("type", "date")
+    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n')
+    }
+</script>
+ 
+<script>
+if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+    jQuery(function($){ //on document.ready
+        $('#birthday').datepicker();
+    })
+}
+</script>
+	
 	</head>
 	
 
@@ -91,8 +112,8 @@ if(userName == null) response.sendRedirect("test");
   
         <form class="navbar-form navbar-left" role="search" action="searchquery" method="POST">
         	<div class="form-group">
-			 <input type="date" id="searchfrom" name="searchfrom" class="form-control" placeholder="Search date from"/>
-			 <input type="date" id="searchto" name="searchto" class="form-control" placeholder="Search date to" />
+			 <input type="date" id="searchfrom" name="searchfrom" class="form-control" placeholder="Search date from YYYY-MM-DD"/>
+			 <input type="date" id="searchto" name="searchto" class="form-control" placeholder="Search date to YYYY-MM-DD" />
         	 <input type="text" class="form-control" placeholder="Search keywords" name="keywords">
              <select name="sort" type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
 				<option value="sortnew">sort from newest</option>
@@ -131,7 +152,11 @@ if(userName == null) response.sendRedirect("test");
 
                 <a href="#" class="thumbnail">
 
-                    <img src="125x125.jpg" alt="125x125">
+                    <!-- <img  src="${pageContext.servletContext.contextPath }/ImageController?id=${row.id}"   alt="125x125"  style="width:304px;height:228px">
+                    -->
+                    
+                    <img  src="${pageContext.servletContext.contextPath }/searchquery/{id}/content"   alt="125x125"  style="width:304px;height:228px">
+                    
 
                 </a>
 

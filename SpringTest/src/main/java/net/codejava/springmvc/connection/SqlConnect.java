@@ -13,13 +13,16 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import oracle.sql.BLOB;
 import net.codejava.springmvc.model.ImageSql;
 import net.codejava.springmvc.model.RegisterUser;
 import net.codejava.springmvc.model.SigninUser;
 
 public class SqlConnect {
 	
-	   String m_url = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";
+	   String m_urlschool = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";
+	   String m_url = "jdbc:oracle:thin:@localhost:1525:CRS";
+
        //1525:gwynne.cs.ualberta.ca:1521 <CSID>@ohaton.cs.ualberta.ca
        String m_driverName = "oracle.jdbc.driver.OracleDriver";
 
@@ -47,14 +50,13 @@ public class SqlConnect {
 		// TODO Auto-generated constructor stub
 	}//Sqlconnect constructor
 
-
 	
 	public void InsertNewUser(RegisterUser registeruser){
 		
 	       try
 	       {
 
-	              m_con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1525:CRS", m_userName, m_password);
+	              m_con = DriverManager.getConnection(m_url, m_userName, m_password);
 	              //stmt = m_con.createStatement();
 	              java.util.Date utilDate = new java.util.Date();
 	              java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
@@ -65,9 +67,7 @@ public class SqlConnect {
 	          	  prep.setDate(3,sqlDate);
 	              prep.executeUpdate();
 	              prep.close();
-	              
-	             
-	              
+	                     
 	              PreparedStatement prep2 = m_con.prepareStatement("insert into PERSONS (USER_NAME, FIRST_NAME, LAST_NAME, ADDRESS, EMAIL, PHONE) VALUES (?,?,?,?,?,?)");
 	          	  prep2.setString(1,registeruser.getUser_name());
 	          	  prep2.setString(2,registeruser.getFirst_name());
@@ -78,10 +78,6 @@ public class SqlConnect {
 	          	  
 	              prep2.executeUpdate();
 	              prep2.close();
-	              //stmt.executeUpdate(createString);
-	              //stmt.close();
-	              
-	              // put this into another method
 	              m_con.close();
 	              
 	       } catch(SQLException ex) {
@@ -101,7 +97,7 @@ public class SqlConnect {
 	       try
 	       {
 
-	              m_con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1525:CRS", m_userName, m_password);
+	              m_con = DriverManager.getConnection(m_url, m_userName, m_password);
 
 	              PreparedStatement prep = m_con.prepareStatement("insert into USERS (USER_NAME, PASSWORD, DATE_REGISTERED) VALUES (?,?,?)");
 	              
@@ -120,16 +116,13 @@ public class SqlConnect {
 	                  
 	                  System.out.println("numberOfRows= " + numberOfRows);
 	                } 
-	              else {
-	                	
+	              else 
+	              	{	
 	                  System.out.println("error: could not get the record counts");
 	                }
-	              
-	 
-	              
-	              prep.close();
-	              
-	              m_con.close();
+	             
+	              prep.close();	         
+	              //m_con.close();
 	              
 	       } catch(SQLException ex) {
 	    	   
@@ -137,49 +130,28 @@ public class SqlConnect {
 	              
 	       } finally {
 	    	   
-	              try{
-	              rs.close();
-	              prepStmt.close();
-	              
-	              m_con.close();}catch(SQLException e){ System.err.println("SQLException: " + e.getMessage());}
-	              
-	              
-	       }
+	              try
+	              {
+	            	  rs.close();
+	            	  prepStmt.close();	
+	            	  m_con.close();
+	            	  
+	              }catch(SQLException e){
+	            	  System.err.println("SQLException: " + e.getMessage());
+	              }            
+	       }//finally
            System.out.println("state= " + State);
-
-	       return State;
-		
+	       return State;	
 	}//statement
 	
 	public void InsertNewImage(ImageSql imagerow){
 	    System.out.println("insertnewimage method");
-
-		/*
-		 
-		CREATE TABLE images (
-		   1photo_id    int,
-		   2owner_name  varchar(24),
-		   3permitted   int,
-		   4subject     varchar(128),
-		   5place       varchar(128),
-		   6timing      date,
-		   7description varchar(2048),
-		   8thumbnail   blob,
-		   9photo       blob,
-		   PRIMARY KEY(photo_id),
-		   FOREIGN KEY(owner_name) REFERENCES users,
-		   FOREIGN KEY(permitted) REFERENCES groups
-		);
-
-		 * */
 		
 	       try
 	       {
 
 	              m_con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1525:CRS", m_userName, m_password);
-	              //stmt = m_con.createStatement();
-	             //"insert into USERS (photo_id, owner_name, permitted, subject, place, timing, description, thumbnail, photo) VALUES (?,?,?,?,?,?,?,?,?)"
-	              
+          
 	              java.util.Date utilDate = new java.util.Date();
 	              java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
@@ -213,13 +185,8 @@ public class SqlConnect {
 	              prep.executeUpdate();
 	              prep.close();
 	              
-	      	    System.out.println("close image prep statement");
+	              System.out.println("close image prep statement");
 
-	         
-	              //stmt.executeUpdate(createString);
-	              //stmt.close();
-	              
-	              // put this into another method
 	              m_con.close();
 	              
 	       } catch(SQLException ex) {
@@ -230,9 +197,87 @@ public class SqlConnect {
 	              
 	       }
 		    System.out.println("end of sqlconnect insert image");
-
-		
+	
 	}//statement
+	
+
+	public byte[] grabpicture(String string){
+		
+			ResultSet rs = null;
+			PreparedStatement prepStmt = null;
+			boolean State = false;
+			Blob blob = null;
+      	    System.out.println("grab picture method");
+      	    byte[] allBytesInBlob = null;
+
+	       try
+	       {
+
+	              m_con = DriverManager.getConnection(m_url, m_userName, m_password);
+
+	              m_con.createStatement();
+	              PreparedStatement stmt = m_con.prepareStatement(string);
+	              ResultSet resultSet = stmt.executeQuery();
+
+	              //http://www.jguru.com/faq/view.jsp?EID=1325
+	              while (resultSet.next()){
+	            	  
+	              	  blob = resultSet.getBlob(1);
+	                  allBytesInBlob = blob.getBytes(1, (int) blob.length());
+
+	                  //int numberOfRows = rs.getInt(1);
+	                  //String name = resultSet.getString(1);
+	                  //String description = resultSet.getString(2);
+	            	    System.out.println(" if of while in grab picture method");
+
+	                  
+	            	    	
+	            	    
+	            	 /*    
+		              if (resultSet.next()) {
+		          	
+		                } 
+		              else 
+		              	{	
+		                  System.out.println("error: could not get the record counts");
+		            	    System.out.println(" else of while of grabpicture method ");
+
+		                }*/
+	            	  
+	              }
+	              resultSet.close();
+	              m_con.close();
+	              
+	       } catch(SQLException ex) {
+	    	   
+	              System.err.println("SQLException: " + ex.getMessage());
+	              
+	       } finally {
+	    	   
+	              try
+	              {
+	            	    System.out.println("try of finally grabpicture method");
+
+	            	  //rs.close();
+	            	  //prepStmt.close();	              
+	            	  m_con.close();
+	              }catch(SQLException e){ 
+	            	  System.err.println("SQLException: " + e.getMessage());
+	            	    System.out.println("catch of finally grabpicture method ");
+
+	              }            
+	       }//finally
+     	    System.out.println("one line before returning from grab picture method  ");
+
+     	    
+
+      	    System.out.println(allBytesInBlob.getClass().getName());
+      	    System.out.println(allBytesInBlob);
+      	    System.out.println(allBytesInBlob.length);
+      	    
+	       return allBytesInBlob;	
+	}//method
+	
 }
 	
 	
