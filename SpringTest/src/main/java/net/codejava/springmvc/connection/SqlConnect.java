@@ -277,6 +277,150 @@ public class SqlConnect {
       	    
 	       return allBytesInBlob;	
 	}//method
+	public boolean makegroup(String username, String groupname){
+		
+		ResultSet rs = null;
+		PreparedStatement prepStmt = null;
+		boolean State = false;
+	
+       try
+       {
+           System.out.println("begin connection into groups lists");
+
+    	   
+              m_con = DriverManager.getConnection(m_url, m_userName, m_password);	              
+              String countstatement = "select count(*) as total from GROUPS where USER_NAME = ? and GROUP_NAME = ?";
+              //String countstatement = "select count(*) as total from GROUPS where GROUP_NAME = ?";
+
+              prepStmt = m_con.prepareStatement(countstatement);	              
+              prepStmt.setString(1, username);
+              prepStmt.setString(2, groupname);
+    
+              System.out.println("before execution check number groups lists");
+
+              rs = prepStmt.executeQuery();
+              
+              if (rs.next()) {
+                  int numberOfRows = rs.getInt(1);
+                  
+                  if (numberOfRows == 0){ 
+                	  State = true; }
+                  
+                  System.out.println("numberOfRows= " + numberOfRows);
+                } 
+              else 
+              	{	
+                  System.out.println("error: could not get the record counts");
+                  State = false;
+	              prepStmt.close();	 
+                  m_con.close();
+                  return State;
+                }
+              
+              
+              System.out.println("begin insert into groups lists");
+
+              
+              java.util.Date utilDate = new java.util.Date();
+              java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+              
+              PreparedStatement prepstmt2 = m_con.prepareStatement("insert into groups(group_id, user_name, group_name,date_created)  select count(*), ?, ?, ? from groups");
+              prepstmt2.setString(1,username);
+              prepstmt2.setString(2,groupname);
+              prepstmt2.setDate(3,sqlDate);
+              prepstmt2.executeUpdate();
+              
+              System.out.println("success insert into groups");
+              State = true;
+              
+              System.out.println("closing insert into groups");
+          
+              prepStmt.close();	 
+              prepstmt2.close();	 
+              m_con.close();
+              
+              
+       } catch(SQLException ex) {
+    	   
+              System.err.println("SQLException: " + ex.getMessage());
+              return false;   
+       }
+       return State;
+		
+	}//statement
+	
+	public boolean joingroup(String registeruser, String groupname){
+		
+		
+			ResultSet rs = null;
+			PreparedStatement prepStmt = null;
+			boolean State = false;
+			int groupid = 0;
+		
+	       try
+	       {
+	    	   
+	              m_con = DriverManager.getConnection(m_url, m_userName, m_password);	              
+	              String countstatement = "select group_id from GROUPS where GROUP_NAME = ?";
+	              prepStmt = m_con.prepareStatement(countstatement);	              
+	              //prepStmt.setString(1, registeruser);
+	              prepStmt.setString(1, groupname);
+	    
+	              rs = prepStmt.executeQuery();
+	              
+	              if (rs.next()) {
+	                  groupid = rs.getInt(1);
+	                  State = true;
+	         
+	                  System.out.println("groupid= " + groupid);
+	                } 
+	              else 
+	              	{	
+	                  System.out.println("error: could not get the record counts");
+	                  State = false;
+		              prepStmt.close();	 
+	                  m_con.close();
+	                  return State;
+	                }
+	              
+	              
+                  System.out.println("begin insert into groups");
+
+	              
+	              java.util.Date utilDate = new java.util.Date();
+	              java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+                  
+	              PreparedStatement prepstmt2 = m_con.prepareStatement("insert into group_lists (group_id, friend_id, date_added, notice) VALUES (?,?,?,?)");
+
+	              prepstmt2.setInt(1,groupid);
+	              prepstmt2.setString(2,registeruser);
+	              prepstmt2.setDate(3,sqlDate);
+	              prepstmt2.setString(4,"");
+	              
+	              prepstmt2.executeUpdate();
+	              
+                  System.out.println("success insert into groups");
+                  State = true;
+                  
+                  System.out.println("closing insert into groups");
+              
+	              prepStmt.close();	 
+	              prepstmt2.close();	 
+                  m_con.close();
+                  
+                  
+                  
+                  
+	       } catch(SQLException ex) {
+	    	   
+	              System.err.println("SQLException: " + ex.getMessage());
+	              return false;
+	              
+	       }
+		
+	       return State;
+	}//statement
+	
 	
 }
 	

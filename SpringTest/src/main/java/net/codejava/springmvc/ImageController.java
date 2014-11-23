@@ -68,15 +68,17 @@ import net.codejava.springmvc.FileValidator;
 //http://examples.javacodegeeks.com/enterprise-java/spring/mvc/spring-mvc-file-upload-example/
 
 @Controller
-@SessionAttributes({"home","searchqueryobject"})
+@SessionAttributes({"username","searchqueryobject"})
 //@RequestMapping("/file.htm")
 public class ImageController {
 	
 	  @RequestMapping(value ="/signin", method = RequestMethod.POST)
-	    public String processSignin(@ModelAttribute("signinForm") SigninUser signinuser,
+	    public ModelAndView processSignin(@ModelAttribute("signinForm") SigninUser signinuser,
 	            Map<String, Object> model, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
 	    	
+		  	ModelAndView mav = new ModelAndView("home1");
+		  	mav.addObject("username", signinuser.getUser_name());
 	    	SqlConnect sqlcon = new SqlConnect("deasis","sqlplus1234");
 
 	    	
@@ -99,7 +101,7 @@ public class ImageController {
 	            
 	            //response.sendRedirect("SigninSuccess.jsp");
 	            //find jsp
-	            return "home1";
+	            return mav;
 
 	            
 	        }//if
@@ -118,7 +120,7 @@ public class ImageController {
 
 	            System.out.println("hahaha= " );
 	            //find jsp
-	            return "home";
+	            return mav;
 
 
 	            
@@ -302,7 +304,7 @@ public class ImageController {
 	
 	@ResponseBody
 	@RequestMapping(value="/searchquery", method= RequestMethod.POST)
-	public String searchQuery(@RequestParam("searchfrom") String searchfrom,@RequestParam("searchto") String searchto, @RequestParam("keywords") String keywords, @RequestParam("sort") String sort, Map<String, Object> model, HttpServletRequest request, HttpServletResponse response){
+	public ModelAndView searchQuery(@RequestParam("searchfrom") String searchfrom,@RequestParam("searchto") String searchto, @RequestParam("keywords") String keywords, @RequestParam("sort") String sort, Map<String, Object> model, HttpServletRequest request, HttpServletResponse response){
 
 	//public String uploadFiles(@RequestParam("files") MultipartFile filed,HttpServletRequest request, List<MultipartFile> files){
 		 
@@ -473,12 +475,109 @@ public class ImageController {
   	    
 	  	System.out.println("before return last line");
 
-  	    return "home1";
+	  	ModelAndView mav = new ModelAndView("home1");
+  	    return mav;
   	    //
 	  	//return modelandview;
 		}
 	
+
+	/*
+	 
+	
+CREATE TABLE group_lists (
+   group_id    int,
+   friend_id   varchar(24),
+   date_added  date,
+   notice      varchar(1024),
+   PRIMARY KEY(group_id, friend_id),
+   FOREIGN KEY(group_id) REFERENCES groups,
+   FOREIGN KEY(friend_id) REFERENCES users
+);
+	
+	
+	
+ insert into groups(group_id, user_name, group_name,date_created)  select count(*), 'zzzz', 'orsaaaaaaeai', sysdate from groups;
+
+
+	 */
+	@ResponseBody
+	@RequestMapping(value="/creategroup", method= RequestMethod.GET)
+	public ModelAndView makeGroup(@ModelAttribute("username") String username, @RequestParam("creategroupname") String creategroupname, Map<String, Object> model, HttpServletRequest request, HttpServletResponse response){
+
+
+		//select count(*) from groups
+		//insert into groups ()
+  	    System.out.println(creategroupname.getClass().getName());
+  	    System.out.println(creategroupname);
+  	    
+  	    System.out.println(username.getClass().getName());
+	    System.out.println(username);
+	    
+	  	System.out.println("from controller begin create group");
+
+
+	    SqlConnect sqlcon = new SqlConnect("deasis", "sqlplys1234");
+	    boolean returncreategroup = sqlcon.makegroup(username, creategroupname);
+  	    
+	  	System.out.println(returncreategroup);
+	  	System.out.println("after controller begin create group");
+
+	  	if 	(returncreategroup == false){
+		  	System.out.println("create group failed");
+
+	  	}else{
+	  		
+		  	System.out.println("create group success");
+//
+	  		
+	  	}
+  	    
+	  	System.out.println("before return last line in create group");
+
+	  	ModelAndView mav = new ModelAndView("home1");
+  	    return mav;
+  	    //
+	  	//return modelandview;
+		}
+	
+	
+	@ResponseBody
+	@RequestMapping(value="/joingroup", method= RequestMethod.GET)
+	public ModelAndView joinGroup(@ModelAttribute("username") String username, @RequestParam("joingroupname") String joingroupname, Map<String, Object> model, HttpServletRequest request, HttpServletResponse response){
+
+
+		//select count(*) from groups
+		//insert into groups ()
+  	    System.out.println(joingroupname.getClass().getName());
+  	    System.out.println(joingroupname);
+  	    
+  	    System.out.println(username.getClass().getName());
+	    System.out.println(username);
+
+  	    //find if group exists
+	    
+	    //if true join group
+  	 
+	    
+	    SqlConnect sqlcon = new SqlConnect("deasis", "sqlplys1234");
+	    boolean returncreategroup = sqlcon.joingroup(username, joingroupname);
+  	    
+	  	System.out.println(returncreategroup);
+
+	  	System.out.println("before return last line in create group");
+
+	  	ModelAndView mav = new ModelAndView("home1");
+  	    return mav;
+  	    //
+	  	//return modelandview;
+		}
+	
+	
+
+	
 	}
+
 
 
 
