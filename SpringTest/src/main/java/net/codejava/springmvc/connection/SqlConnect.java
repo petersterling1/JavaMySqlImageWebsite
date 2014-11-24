@@ -1,19 +1,17 @@
 package net.codejava.springmvc.connection;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Date;
 
-import oracle.sql.BLOB;
 import net.codejava.springmvc.model.ImageSql;
 import net.codejava.springmvc.model.RegisterUser;
 import net.codejava.springmvc.model.SigninUser;
@@ -50,6 +48,95 @@ public class SqlConnect {
 		// TODO Auto-generated constructor stub
 	}//Sqlconnect constructor
 
+	public ResultSet resultFromDatacube(String username, String subject, String when, Date startDate, Date endDate)
+	{	
+		//requires a DataCube to exist
+		
+		//When needs to be either "year", "month", "week", or null/""
+		//year = splits results into grouping by year
+		//month = splits results into grouping by month
+		//week = splits results into a grouping by DAY
+		//null = ignores date all together
+		
+		ResultSet rs = null;
+		java.sql.Date sDateSQL = new java.sql.Date(startDate.getTime());
+		java.sql.Date eDateSQL = new java.sql.Date(endDate.getTime());
+		String sqlQuery = null;
+		boolean usingDate = true;
+		
+		if(when.equals("year"))
+		{
+			sqlQuery = "SELECT user_name, subject, year, sum(number) FROM data_cube"
+					+ " WHERE user_name = ? and subject = ? and when > ? and when < ?"
+					+ " GROUP BY user_name, subject, year";
+			
+		} else if(when.equals("month")) {
+			
+			sqlQuery = "SELECT user_name, subject, month, sum(number) FROM data_cube"
+					+ " WHERE user_name = ? and subject = ? and when > ? and when < ?"
+					+ " GROUP BY user_name, subject, month";
+			
+		} else if(when.equals("week")) {
+			
+			sqlQuery = "SELECT user_name, subject, day, sum(number) FROM data_cube"
+					+ " WHERE user_name = ? and subject = ? and when > ? and when < ?"
+					+ " GROUP BY user_name, subject, day";
+			
+		} else {
+			
+			sqlQuery = "SELECT user_name, subject, sum(number) FROM data_cube"
+					+ " WHERE user_name = ? and subject = ? "
+					+ " GROUP BY user_name, subject";
+			usingDate = false;
+		}
+		
+		try {
+			PreparedStatement prep = m_con.prepareStatement(sqlQuery);
+			prep.setString(1, username);
+			prep.setString(2, subject);
+			if(!usingDate)
+			{
+				prep.setDate(3, sDateSQL);
+				prep.setDate(4, eDateSQL);
+			}
+			rs = prep.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
+	
+	public boolean createDataCube()
+	{
+		//Creates a temporary data cube table
+		
+		//FACT TABLE FORMAT: (user_name, subject, when, image_number)
+		//FACT TABLE NAME: image_analysis
+		
+		try
+		{
+			m_con = DriverManager.getConnection(m_url, m_userName, m_password);
+			
+			String cube_sqlstatement = "CREATE GLOBAL TEMPORARY TABLE data_cube "
+									+ "ON COMMIT PRESERVE ROWS "
+									+ "AS SELECT A.user_name, A.subject, A.when, count(*) as number, EXTRACT(year from A.when) as year, EXTRACT(month from A.when) as month, EXTRACT(day from A.when) as day "
+									+ "FROM image_analysis A "
+									+ "GROUP BY CUBE (A.user_name, A.subject, A.when, year, month, day)";
+			
+			PreparedStatement prep = m_con.prepareStatement(cube_sqlstatement);
+			prep.execute();
+			prep.close();
+			
+		} catch(SQLException ex) {
+			 System.err.println("SQLException: " + ex.getMessage());
+			 return false;
+		}
+	
+		return true;
+		
+	}
 	
 	public void InsertNewUser(RegisterUser registeruser){
 		
