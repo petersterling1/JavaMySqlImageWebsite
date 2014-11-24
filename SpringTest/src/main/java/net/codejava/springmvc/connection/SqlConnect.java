@@ -112,8 +112,9 @@ public class SqlConnect {
 	{
 		//Creates a temporary data cube table
 		
-		//FACT TABLE FORMAT: (user_name, subject, when, image_number)
-		//FACT TABLE NAME: image_analysis
+		//FACT TABLE FORMAT: (user_name, subject, when)
+		//FACT TABLE NAME: fact_image
+		//This table needs to have stuff added to whenever an image is added to the database
 		
 		try
 		{
@@ -122,8 +123,17 @@ public class SqlConnect {
 			String cube_sqlstatement = "CREATE GLOBAL TEMPORARY TABLE data_cube "
 									+ "ON COMMIT PRESERVE ROWS "
 									+ "AS SELECT A.user_name, A.subject, A.when, count(*) as number, EXTRACT(year from A.when) as year, EXTRACT(month from A.when) as month, EXTRACT(day from A.when) as day "
-									+ "FROM image_analysis A "
+									+ "FROM fact_image A "
 									+ "GROUP BY CUBE (A.user_name, A.subject, A.when, year, month, day)";
+			
+			
+			//This below query does not use a fact table.
+			/*
+			String cube_sqlstatement = "CREATE GLOBAL TEMPORARY TABLE data_cube "
+			+ "ON COMMIT PRESERVE ROWS "
+			+ "AS SELECT A.user_name, B.subject, C.timing, count(*) as number, EXTRACT(year from C.timing) as year, EXTRACT(month from C.timing) as month, EXTRACT(day from C.timing) as day "
+			+ "FROM image_analysis A "
+			+ "GROUP BY CUBE (A.user_name, A.subject, A.when, year, month, day)";*/
 			
 			PreparedStatement prep = m_con.prepareStatement(cube_sqlstatement);
 			prep.execute();
