@@ -124,7 +124,7 @@ public class SqlConnect {
 									+ "ON COMMIT PRESERVE ROWS "
 									+ "AS SELECT A.user_name, A.subject, A.when, count(*) as number, EXTRACT(year from A.when) as year, EXTRACT(month from A.when) as month, EXTRACT(day from A.when) as day "
 									+ "FROM fact_image A "
-									+ "GROUP BY CUBE (A.user_name, A.subject, A.when, year, month, day)";
+									+ "GROUP BY A.when, year, month, day, CUBE (A.user_name, A.subject)";
 			
 			
 			//This below query does not use a fact table.
